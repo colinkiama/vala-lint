@@ -42,3 +42,4 @@ test('file', file_test, env: test_envars)
 test('auto-fix', auto_fix_test, env: test_envars)
 
 test('self', vala_lint, workdir: meson.source_root(), env: test_envars)
+    
