@@ -36,4 +36,9 @@ public class ValaLint.Checks.TabCheck : Check {
             }
         }
     }
+
+    public override bool apply_fix (Vala.SourceLocation begin, Vala.SourceLocation end, ref string contents) {
+        contents = contents.replace ("\t", " ");
+        return true;
+    }
 }
