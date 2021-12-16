@@ -49,7 +49,7 @@ public class ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck : Check {
 
 
         // Expected whitespace before
-        if (line.length >= begin.column && line[begin.column] == '{') {
+        if (line[begin.column] == '{') {
             lines[begin.line - 1] = line[0:begin.column] + " " + line[begin.column:line.length];
         } else {
             // Unexpected linebreak before

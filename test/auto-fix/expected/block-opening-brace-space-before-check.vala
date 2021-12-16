@@ -2,9 +2,9 @@
 
 void test () { }
 
-void test2 (){ }
+void test2 () { }
 
-void test3 () { 
+void test3 () {
 }
 
 int main (string[] args) {
