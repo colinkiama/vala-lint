@@ -73,8 +73,18 @@ public class ValaLint.Checks.DoubleSpacesCheck : Check {
                         index = Utils.get_pos_of ("  ", index + 1, pos_end);
                     }
                 }
-
             }
         }
+    }
+
+    public override bool apply_fix (Vala.SourceLocation begin, Vala.SourceLocation end, ref string contents) {
+        var lines = contents.split ("\n");
+
+        var line = lines[begin.line - 1];
+        line = line[0:begin.column - 1] + line[begin.column:line.length];
+        lines[begin.line - 1] = line;
+
+        contents = string.joinv ("\n", lines);
+        return true;
     }
 }
