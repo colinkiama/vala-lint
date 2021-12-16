@@ -1,4 +1,4 @@
-/*
+ /*
  * Copyright (c) 2016-2019 elementary LLC. (https://github.com/elementary/vala-lint)
  *
  * This program is free software; you can redistribute it and/or
@@ -40,5 +40,41 @@ public class ValaLint.Checks.BlockOpeningBraceSpaceBeforeCheck : Check {
                                    ref mistake_list, 1, 1);
             }
         }
+    }
+
+    public override bool apply_fix (Vala.SourceLocation begin, Vala.SourceLocation end, ref string contents) {
+        var lines = contents.split ("\n");
+
+        var line = lines[begin.line - 1];
+
+
+        // Expected whitespace before
+        if (line.length >= begin.column && line[begin.column] == '{') {
+            lines[begin.line - 1] = line[0:begin.column] + " " + line[begin.column:line.length];
+        } else {
+            // Unexpected linebreak before
+            line = line[0:begin.column] + " " + "{";
+            lines[begin.line - 1] = line;
+
+            var next_line = lines[begin.line];
+            int spaces_to_indent = next_line.index_of ("{", 0);
+            var next_line_stripped = next_line[spaces_to_indent + 1:next_line.length].strip ();
+
+            // Either just remove opening bracket or move sole closing bracket to
+            // previous opening bracket position
+            if (next_line_stripped == "}") {
+                var sb = new StringBuilder ();
+                for (int i = 0; i < spaces_to_indent; i++) {
+                    sb.append (" ");
+                }
+
+                lines[begin.line] = sb.str + "}";
+            } else {
+                lines[begin.line] = next_line[0:spaces_to_indent] + next_line[spaces_to_indent + 1:next_line.length];
+            }
+        }
+
+        contents = string.joinv ("\n", lines);
+        return true;
     }
 }
